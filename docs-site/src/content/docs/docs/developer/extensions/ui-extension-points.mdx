@@ -255,7 +255,7 @@ Each `UITutorialSlide` can contain a title, caption, bullet points, Markdown bod
 
 ## Entity media overrides
 
-`UIComponentOverride` currently supports the stable targets `entity.media` and [`video.engine`](#video-engines). Use `UIManifestBuilder.OverrideComponent("entity.media", componentName, priority)` and export that component from the owning extension's frontend bundle. The frontend SDK exports `ENTITY_MEDIA_TARGET` for code that needs the same target string.
+A `UIComponentOverride` with the target `entity.media` replaces an entity's primary media, the image or preview that cards, heroes, and similar surfaces show. Use `UIManifestBuilder.OverrideComponent("entity.media", componentName, priority)` and export that component from the owning extension's frontend bundle. The frontend SDK exports `ENTITY_MEDIA_TARGET` for code that needs the same target string.
 
 The component receives `EntityMediaRenderProps`: the entity type and id, surface, native image URL, alt text, fit, loading hint, class name, and `renderDefault`. Surfaces currently include `card`, `hero`, `list`, `picker`, `recommendation`, `dialog`, and `hover`. Call `renderDefault()` when the extension does not handle the entity or surface. That delegates to the next lower-priority override and eventually Cove's native media.
 
@@ -265,9 +265,11 @@ An extension that shows an entity's primary media itself, such as a dashboard wi
 
 Hover previews use a `4:3` frame by default. When contributed hover media has another intrinsic shape, put `data-entity-media-aspect-ratio="width:height"` on an element rendered by the override. Cove validates positive numeric values and uses the declaration to size its host-owned hover frame.
 
-## Video engines
+## Video engines override
 
-A `video.engine` override replaces the element that plays video while Cove's player stays around it: controls, keyboard shortcuts, watch tracking, resume, overlays, media-player slots, and the quality menu keep working. Use it to play formats or protocols the browser cannot, such as a WebAssembly decoder or an HLS library. Register it with `UIManifestBuilder.OverrideComponent("video.engine", componentName, priority)` and export the component from the extension's frontend bundle. `VIDEO_ENGINE_TARGET` and the types below come from `@cove/runtime/components` and the frontend SDK.
+A `UIComponentOverride` with the target `video.engine` replaces the element that plays video, while Cove's player stays around it: controls, keyboard shortcuts, watch tracking, resume, overlays, media-player slots, and the quality menu keep working. Use `UIManifestBuilder.OverrideComponent("video.engine", componentName, priority)` and export that component from the owning extension's frontend bundle. The frontend SDK exports `VIDEO_ENGINE_TARGET` for code that needs the same target string; it and the types below also come from `@cove/runtime/components`.
+
+Use an engine to play formats or protocols the browser cannot, such as through a WebAssembly decoder or an HLS library.
 
 The component must carry a static `videoEngine` declaration of type `VideoEngineCapabilities`. Cove ignores a contribution without one.
 
